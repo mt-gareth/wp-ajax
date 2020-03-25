@@ -49,7 +49,6 @@ class WP_AJAX
 			'maxPages'    => $max_pages,
 			'posts'       => $loop->posts,
 		] );
-
 	}
 
 	protected function getQueryArgs()
