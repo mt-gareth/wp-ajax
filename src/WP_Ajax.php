@@ -30,16 +30,16 @@ class WP_AJAX
 	public function ajax_response()
 	{
 		$args = $this->getQueryArgs();
-		$loop = new WP_Query( $args );
+		$loop = new \WP_Query( $args );
 		$current_page = (int)$loop->query_vars[ 'paged' ];
 		$current_page = $current_page ? $current_page : 1;
 		$max_pages = (int)$loop->max_num_pages;
 
-		$html = App\Template( $this->output_template, [ 'posts' => $loop->posts ] );
+		$html = \App\Template( $this->output_template, [ 'posts' => $loop->posts ] );
 		$pagination = '';
 		if ( $max_pages > 1 && $this->pagination_template !== false ) {
 			$pages_array = self::arrayOfPages( $current_page, $max_pages, $this->pagination_pages_to_show );
-			$pagination = App\Template( $this->pagination_template, [ 'pages' => $pages_array, 'current_page' => $current_page, 'max_pages' => $max_pages ] );
+			$pagination = \App\Template( $this->pagination_template, [ 'pages' => $pages_array, 'current_page' => $current_page, 'max_pages' => $max_pages ] );
 		}
 
 		wp_send_json( [
