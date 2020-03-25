@@ -73,7 +73,7 @@ class WP_AJAX
 
 	public static function arrayOfPages( $current_page, $max_pages, $pages_to_show = 9 )
 	{
-		if ( !( $pages_to_show % 2 ) ) $pages_to_show--; // if $pages_to_show not odd subrtact 1 to make it so
+		if ( !( $pages_to_show % 2 ) ) $pages_to_show--; // if $pages_to_show not odd subtract 1 to make it so
 		$pages_on_either_side = ( $pages_to_show - 1 ) / 2 - 2;
 		$page_array = range( 1, $max_pages );
 		if ( $max_pages <= $pages_to_show ) return $page_array; //if you can show all the pages, do
