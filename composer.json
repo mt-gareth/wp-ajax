@@ -9,9 +9,13 @@
             "email": "gareth@motiontactic.com"
         }
     ],
-    "minimum-stability": "stable",
-    "autoload": {
-        "files": ["src/WP_Ajax.php"]
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.0"
     },
-    "require": {}
+    "autoload": {
+        "files": [
+            "src/WP_Ajax.php"
+        ]
+    }
 }
