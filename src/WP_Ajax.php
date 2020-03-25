@@ -10,13 +10,23 @@ class WP_AJAX
 	private $pagination_pages_to_show;
 	private $include_nopriv;
 
-	function __construct( $action, $output_template, $pagination_template = false, $pagination_pages_to_show = 9, $include_nopriv = true )
+	function __construct( array $args )
 	{
-		$this->action = $action;
-		$this->output_template = $output_template;
-		$this->pagination_template = $pagination_template;
-		$this->pagination_pages_to_show = $pagination_pages_to_show;
-		$this->include_nopriv = $include_nopriv;
+		$defaults = [
+			'action'                   => 'get_posts',
+			'output_template'          => false,
+			'pagination_template'      => false,
+			'pagination_pages_to_show' => 9,
+			'include_nopriv'           => true,
+		];
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$this->action = $args[ 'action' ];
+		$this->output_template = $args[ 'output_template' ];
+		$this->pagination_template = $args[ 'pagination_template' ];
+		$this->pagination_pages_to_show = $args[ 'pagination_pages_to_show' ];
+		$this->include_nopriv = $args[ 'include_nopriv' ];
 		$this->setup_ajax_handlers();
 	}
 
@@ -35,7 +45,9 @@ class WP_AJAX
 		$current_page = $current_page ? $current_page : 1;
 		$max_pages = (int)$loop->max_num_pages;
 
-		$html = \App\Template( $this->output_template, [ 'posts' => $loop->posts ] );
+		$html = '';
+		if ( $this->output_template !== false )
+			$html = \App\Template( $this->output_template, [ 'posts' => $loop->posts ] );
 		$pagination = '';
 		if ( $max_pages > 1 && $this->pagination_template !== false ) {
 			$pages_array = self::arrayOfPages( $current_page, $max_pages, $this->pagination_pages_to_show );
