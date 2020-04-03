@@ -1,21 +1,21 @@
 {
-    "name": "motiontactic/wp-ajax",
-    "description": "Class to be extended to add boilerplate to WP-AJAX",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Gareth McDonald",
-            "email": "gareth@motiontactic.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "php": ">=7.1"
-    },
-    "autoload": {
-        "files": [
-            "src/WP_Ajax.php"
-        ]
+  "name": "motiontactic/wp-ajax",
+  "description": "Class to be extended to add boilerplate to WP-AJAX",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gareth McDonald",
+      "email": "gareth@motiontactic.com"
     }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.1"
+  },
+  "autoload": {
+    "files": [
+      "src/WP_Ajax.php"
+    ]
+  }
 }

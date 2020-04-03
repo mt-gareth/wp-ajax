@@ -39,7 +39,7 @@ class WP_AJAX
 
 	public function ajax_response()
 	{
-		[$posts, $current_page, $max_pages] = $this->getPostsAndPages();
+		[ $posts, $current_page, $max_pages ] = $this->getPostsAndPages();
 
 		$html = '';
 		if ( $this->output_template !== false )
@@ -76,7 +76,7 @@ class WP_AJAX
 		$current_page = $current_page ? $current_page : 1;
 		$max_pages = (int)$loop->max_num_pages;
 
-		return [$posts, $current_page, $max_pages];
+		return [ $posts, $current_page, $max_pages ];
 	}
 
 	public static function arrayOfPages( $current_page, $max_pages, $pages_to_show = 9 )
