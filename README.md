@@ -43,7 +43,7 @@ new BlogFeed( [
 ] );
 ```
 
-####Default Args
+### Default Args
 ```php
 $args = [
 	'action'                   => 'get_posts',  //ajax action name used by JS to address this query

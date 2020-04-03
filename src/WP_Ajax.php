@@ -39,15 +39,11 @@ class WP_AJAX
 
 	public function ajax_response()
 	{
-		$args = $this->getQueryArgs();
-		$loop = new \WP_Query( $args );
-		$current_page = (int)$loop->query_vars[ 'paged' ];
-		$current_page = $current_page ? $current_page : 1;
-		$max_pages = (int)$loop->max_num_pages;
+		[$posts, $current_page, $max_pages] = $this->getPostsAndPages();
 
 		$html = '';
 		if ( $this->output_template !== false )
-			$html = \App\Template( $this->output_template, [ 'posts' => $loop->posts ] );
+			$html = \App\Template( $this->output_template, [ 'posts' => $posts ] );
 		$pagination = '';
 		if ( $max_pages > 1 && $this->pagination_template !== false ) {
 			$pages_array = self::arrayOfPages( $current_page, $max_pages, $this->pagination_pages_to_show );
@@ -59,7 +55,7 @@ class WP_AJAX
 			'pagination'  => $pagination,
 			'currentPage' => $current_page,
 			'maxPages'    => $max_pages,
-			'posts'       => $loop->posts,
+			'posts'       => $posts,
 		] );
 	}
 
@@ -69,6 +65,18 @@ class WP_AJAX
 			'post_status' => 'publish',
 			'post_type'   => 'post',
 		];
+	}
+
+	protected function getPostsAndPages()
+	{
+		$args = $this->getQueryArgs();
+		$loop = new \WP_Query( $args );
+		$posts = $loop->posts;
+		$current_page = (int)$loop->query_vars[ 'paged' ];
+		$current_page = $current_page ? $current_page : 1;
+		$max_pages = (int)$loop->max_num_pages;
+
+		return [$posts, $current_page, $max_pages];
 	}
 
 	public static function arrayOfPages( $current_page, $max_pages, $pages_to_show = 9 )
