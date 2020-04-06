@@ -79,7 +79,7 @@ class WP_AJAX
 		return [ $posts, $current_page, $max_pages ];
 	}
 
-	public static function arrayOfPages( $current_page, $max_pages, $pages_to_show = 9 )
+	public static function arrayOfPages( $current_page, $max_pages, $pages_to_show = 9, $ellipsis_char = '...' )
 	{
 		if ( !( $pages_to_show % 2 ) ) $pages_to_show--; // if $pages_to_show not odd subtract 1 to make it so
 		$pages_on_either_side = ( $pages_to_show - 1 ) / 2 - 2;
@@ -96,8 +96,8 @@ class WP_AJAX
 			if ( $current_page > $max_pages - $page_to_show_all && $page > $max_pages - $page_to_show_all - $pages_on_either_side ) return true;//if we are within $pages_to_show - 2 of the end just show the last $pages_to_show - 2
 			return false;
 		} ) );
-		if ( $page_array[ 1 ] !== 2 ) array_splice( $page_array, 1, 0, [ 'E' ] );
-		if ( $page_array[ count( $page_array ) - 2 ] !== $max_pages - 1 ) array_splice( $page_array, count( $page_array ) - 1, 0, [ 'E' ] );
+		if ( $page_array[ 1 ] !== 2 ) array_splice( $page_array, 1, 0, [ $ellipsis_char ] );
+		if ( $page_array[ count( $page_array ) - 2 ] !== $max_pages - 1 ) array_splice( $page_array, count( $page_array ) - 1, 0, [ $ellipsis_char ] );
 		return $page_array;
 	}
 }
