@@ -41,6 +41,29 @@ class WP_AJAX
 	{
 		[ $posts, $current_page, $max_pages ] = $this->getPostsAndPages();
 
+		[ $html, $pagination ] = $this->get_html( $posts, $current_page, $max_pages );
+
+
+		wp_send_json( [
+			'html'        => $html,
+			'pagination'  => $pagination,
+			'currentPage' => $current_page,
+			'maxPages'    => $max_pages,
+			'posts'       => $posts,
+		] );
+	}
+
+	public function html_response()
+	{
+		[ $posts, $current_page, $max_pages ] = $this->getPostsAndPages();
+
+		[ $html, $pagination ] = $this->get_html( $posts, $current_page, $max_pages );
+
+		return [ $html, $pagination ];
+	}
+
+	protected function get_html( $posts, $current_page, $max_pages )
+	{
 		$html = '';
 		if ( $this->output_template !== false )
 			$html = \App\Template( $this->output_template, [ 'posts' => $posts ] );
@@ -50,13 +73,7 @@ class WP_AJAX
 			$pagination = \App\Template( $this->pagination_template, [ 'pages' => $pages_array, 'current_page' => $current_page, 'max_pages' => $max_pages ] );
 		}
 
-		wp_send_json( [
-			'html'        => $html,
-			'pagination'  => $pagination,
-			'currentPage' => $current_page,
-			'maxPages'    => $max_pages,
-			'posts'       => $posts,
-		] );
+		return [ $html, $pagination ];
 	}
 
 	protected function getQueryArgs()
