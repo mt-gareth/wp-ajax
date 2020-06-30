@@ -6,6 +6,7 @@ class WP_AJAX
 {
 	private $action;
 	private $output_template;
+	private $no_results_template;
 	private $pagination_template;
 	private $pagination_pages_to_show;
 	private $include_nopriv;
@@ -15,6 +16,7 @@ class WP_AJAX
 		$defaults = [
 			'action'                   => 'get_posts',
 			'output_template'          => false,
+			'no_results_template'      => false,
 			'pagination_template'      => false,
 			'pagination_pages_to_show' => 9,
 			'include_nopriv'           => true,
@@ -24,6 +26,7 @@ class WP_AJAX
 
 		$this->action = $args[ 'action' ];
 		$this->output_template = $args[ 'output_template' ];
+		$this->no_results_template = $args[ 'no_results_template' ];
 		$this->pagination_template = $args[ 'pagination_template' ];
 		$this->pagination_pages_to_show = $args[ 'pagination_pages_to_show' ];
 		$this->include_nopriv = $args[ 'include_nopriv' ];
@@ -65,8 +68,11 @@ class WP_AJAX
 	protected function get_html( $posts, $current_page, $max_pages )
 	{
 		$html = '';
-		if ( $this->output_template !== false )
+		if ( !count( $posts ) && $this->no_results_template !== false )
+			$html = \App\Template( $this->no_results_template );
+		if ( count( $posts ) && $this->output_template !== false )
 			$html = \App\Template( $this->output_template, [ 'posts' => $posts ] );
+
 		$pagination = '';
 		if ( $max_pages > 1 && $this->pagination_template !== false ) {
 			$pages_array = self::arrayOfPages( $current_page, $max_pages, $this->pagination_pages_to_show );
