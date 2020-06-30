@@ -68,8 +68,14 @@ class WP_AJAX
 	protected function get_html( $posts, $current_page, $max_pages )
 	{
 		$html = '';
-		if ( !count( $posts ) && $this->no_results_template !== false )
-			$html = \App\Template( $this->no_results_template );
+		if ( !count( $posts ) ) {
+			if ( $this->no_results_template !== false ) {
+				$html = \App\Template( $this->no_results_template );
+			} else {
+				$html = '<div class="no-results">No Results Found</div>';
+			}
+		}
+
 		if ( count( $posts ) && $this->output_template !== false )
 			$html = \App\Template( $this->output_template, [ 'posts' => $posts ] );
 
