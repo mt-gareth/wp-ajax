@@ -1,7 +1,6 @@
 <?php
 
 namespace motiontactic;
-
 class WP_AJAX
 {
 	private $action;
@@ -21,9 +20,7 @@ class WP_AJAX
 			'pagination_pages_to_show' => 9,
 			'include_nopriv'           => true,
 		];
-
 		$args = wp_parse_args( $args, $defaults );
-
 		$this->action = $args[ 'action' ];
 		$this->output_template = $args[ 'output_template' ];
 		$this->no_results_template = $args[ 'no_results_template' ];
@@ -43,10 +40,7 @@ class WP_AJAX
 	public function ajax_response()
 	{
 		[ $posts, $current_page, $max_pages ] = $this->getPostsAndPages();
-
 		[ $html, $pagination ] = $this->get_html( $posts, $current_page, $max_pages );
-
-
 		wp_send_json( [
 			'html'        => $html,
 			'pagination'  => $pagination,
@@ -59,9 +53,7 @@ class WP_AJAX
 	public function html_response()
 	{
 		[ $posts, $current_page, $max_pages ] = $this->getPostsAndPages();
-
 		[ $html, $pagination ] = $this->get_html( $posts, $current_page, $max_pages );
-
 		return [ $html, $pagination ];
 	}
 
@@ -70,22 +62,30 @@ class WP_AJAX
 		$html = '';
 		if ( !count( $posts ) ) {
 			if ( $this->no_results_template !== false ) {
-				$html = \App\Template( $this->no_results_template );
+				$html = self::get_blade_template( $this->no_results_template );
 			} else {
-				$html = '<div class="no-results">No Results Found</div>';
+				$html = '<div class="no-results">No Results...</div>';
 			}
 		}
-
 		if ( count( $posts ) && $this->output_template !== false )
-			$html = \App\Template( $this->output_template, [ 'posts' => $posts ] );
-
+			$html = self::get_blade_template( $this->output_template, [ 'posts' => $posts ] );
 		$pagination = '';
 		if ( $max_pages > 1 && $this->pagination_template !== false ) {
 			$pages_array = self::arrayOfPages( $current_page, $max_pages, $this->pagination_pages_to_show );
-			$pagination = \App\Template( $this->pagination_template, [ 'pages' => $pages_array, 'current_page' => $current_page, 'max_pages' => $max_pages ] );
+			$pagination = self::get_blade_template( $this->pagination_template, [ 'pages' => $pages_array, 'current_page' => $current_page, 'max_pages' => $max_pages ] );
 		}
-
 		return [ $html, $pagination ];
+	}
+
+	public static function get_blade_template( $template, $params = [] )
+	{
+		if ( function_exists( '\App\Template' ) ) {
+			return \App\Template( $template, $params );
+		}
+		if ( function_exists( '\Roots\view' ) ) {
+			return \Roots\view( $template, $params )->render();
+		}
+		return 'View function not found!';
 	}
 
 	protected function getQueryArgs()
@@ -104,7 +104,6 @@ class WP_AJAX
 		$current_page = (int)$loop->query_vars[ 'paged' ];
 		$current_page = $current_page ? $current_page : 1;
 		$max_pages = (int)$loop->max_num_pages;
-
 		return [ $posts, $current_page, $max_pages ];
 	}
 
