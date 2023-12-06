@@ -10,8 +10,14 @@ class WP_AJAX
 	private $pagination_pages_to_show;
 	private $include_nopriv;
 
-	function __construct( array $args )
+	private $query_args = [
+		'post_status' => 'publish',
+		'post_type'   => 'post',
+	];
+
+	function __construct( array $args, array $query_args = null )
 	{
+		$this->query_args = $query_args ?: $this->query_args;
 		$defaults = [
 			'action'                   => 'get_posts',
 			'output_template'          => false,
@@ -68,7 +74,10 @@ class WP_AJAX
 			}
 		}
 		if ( count( $posts ) && $this->output_template !== false )
-			$html = self::get_blade_template( $this->output_template, [ 'posts' => $posts ] );
+			$html = self::get_blade_template( $this->output_template, [
+				'posts'     => $posts,
+				'post_type' => $this->query_args[ 'post_type' ],
+			] );
 		$pagination = '';
 		if ( $max_pages > 1 && $this->pagination_template !== false ) {
 			$pages_array = self::arrayOfPages( $current_page, $max_pages, $this->pagination_pages_to_show );
@@ -90,10 +99,7 @@ class WP_AJAX
 
 	protected function getQueryArgs()
 	{
-		return [
-			'post_status' => 'publish',
-			'post_type'   => 'post',
-		];
+		return $this->query_args;
 	}
 
 	protected function getPostsAndPages()
